@@ -43,21 +43,21 @@ $container['db'] = function ($c) {
 /* Dependencies END */
 
 /* Routes */
+// home
 $app->get('/', function (Request $request, Response $response) {
     return $response->getBody()->write("hello");
 });
 
-$app->get('/hello[/{name}]', function (Request $request, Response $response, array $args) {
-    if (isset($args['name'])) {
-        $name = $args['name'];
-        $response->getBody()->write("Hello, $name");
-    } else {
-        $response = new ErrorResponse(204);
-    }
-
-    return $response;
+// article details
+$app->get('/article/{id}', function () {
 });
+
+// cart
+$app->get('/cart', function () {
+});
+
 
 /* Routes END */
 
+// Run the app
 $app->run();
