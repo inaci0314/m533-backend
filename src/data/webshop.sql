@@ -1,0 +1,11 @@
+CREATE DATABASE webshop DEFAULT CHARSET UTF8;
+USE webshop;
+
+CREATE TABLE article (
+    id INT UNSIGNED NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    description VARCHAR(250),
+    stock INT UNSIGNED NOT NULL,
+    price FLOAT UNSIGNED NOT NULL,
+    
+);
