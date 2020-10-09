@@ -2,10 +2,39 @@
 
 class Article
 {
+    /**
+     * $_id
+     *
+     * @var integer
+     */
     private $_id = 0;
+
+    /**
+     * $_name
+     *
+     * @var string
+     */
     private $_name = "";
+
+    /**
+     * $_description
+     *
+     * @var string
+     */
     private $_description = "";
+
+    /**
+     * $_price
+     *
+     * @var integer
+     */
     private $_price = 0;
+
+    /**
+     * $_stock
+     *
+     * @var integer
+     */
     private $_stock = 0;
 
     /**
@@ -27,6 +56,16 @@ class Article
     }
 
     /**
+     * getId
+     *
+     * @return integer
+     */
+    public function getId(): int
+    {
+        return $this->_id;
+    }
+
+    /**
      * setId
      * 
      * @param int $id
@@ -35,6 +74,16 @@ class Article
     public function setId(int $id)
     {
         $this->_id = $id;
+    }
+
+    /**
+     * getName
+     *
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->_name;
     }
 
     /**
@@ -48,6 +97,11 @@ class Article
         $this->_name = $name;
     }
 
+    public function getDescription(): string
+    {
+        return $this->_description;
+    }
+
     /**
      * setDescription
      *
@@ -59,6 +113,11 @@ class Article
         $this->_description = $description;
     }
 
+    public function getPrice(): float
+    {
+        return $this->_price;
+    }
+
     /**
      * setPrice
      *
@@ -68,6 +127,11 @@ class Article
     public function setPrice(string $price)
     {
         $this->_price = $price;
+    }
+
+    public function getSock(): int
+    {
+        return $this->_stock;
     }
 
     /**
