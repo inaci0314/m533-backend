@@ -2,6 +2,7 @@
 
 abstract class ArticleRepository
 {
+    #region Properties
     /**
      * Singleton instance
      *
@@ -9,12 +10,24 @@ abstract class ArticleRepository
      */
     public static $instance = null;
 
+    #endregion
+
+    #region Accessors
+
     /**
      * Returns the list of all articles
      *
      * @return Article[]
      */
-    public abstract function getAllArticles();
+    public abstract function getAllArticles(): iterable;
+
+    /**
+     * Returns an article with the given id
+     *
+     * @param int $id
+     * @return Article
+     */
+    public abstract function getArticleById(int $id): ?Article;
 
     /**
      * Returns a list of items of the given category
@@ -22,23 +35,18 @@ abstract class ArticleRepository
      * @param int $categoryId
      * @return Article[]
      */
-    public abstract function getArticlesByCategory(int $categoryId);
+    public abstract function getArticlesByCategory(int $categoryId): iterable;
 
     /**
      * Returns a list of articles whose names match the search string
      *
-     * @return Articles[]
+     * @return Article[]
      */
-    public abstract function getArticlesByName();
+    public abstract function findArticlesByName(): iterable;
 
-    /**
-     * returns an article with the given id
-     *
-     * @param int $id
-     * @return Article
-     */
-    public abstract function getArticleById(int $id);
+    #endregion
 
+    #region Mutators
 
     /**
      * Adds an article to the repository
@@ -56,4 +64,6 @@ abstract class ArticleRepository
      * @return void
      */
     public abstract function removeArticle(int $articleId);
+
+    #endregion
 }

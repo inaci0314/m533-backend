@@ -1,13 +1,21 @@
 <?php
 
-class Article
+class ArticleImpl implements Article
 {
+    #region Properties
     /**
      * $_id
      *
      * @var integer
      */
     private $_id = 0;
+
+    /**
+     * $_categoryId
+     *
+     * @var integer
+     */
+    private $_categoryId = 0;
 
     /**
      * $_name
@@ -37,26 +45,32 @@ class Article
      */
     private $_stock = 0;
 
+    #endregion
+
     /**
-     * __construct
+     * Creates a new article
      *
      * @param  int $id
      * @param  string $name
+     * @param  int $categoryId
      * @param  string $description
      * @param  float $_price
      * @param  int $stock
      */
-    public function __construct($id, $name, $description, $price, $stock)
+    public function __construct($id, $categoryId, $name, $description, $price, $stock)
     {
         $this->setId($id);
+        $this->SetCategoryId($categoryId);
         $this->setName($name);
         $this->setDescription($description);
         $this->setPrice($price);
         $this->setStock($stock);
     }
 
+
+    #region Accessors
+
     /**
-     * getId
      *
      * @return integer
      */
@@ -66,7 +80,56 @@ class Article
     }
 
     /**
-     * setId
+     * 
+     * @return integer
+     */
+    public function getCategoryId(): int
+    {
+        return $this->_categoryId;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->_name;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->_description;
+    }
+
+    /**
+     *
+     * @return float
+     */
+    public function getPrice(): float
+    {
+        return $this->_price;
+    }
+
+
+    /**
+     *
+     * @return integer
+     */
+    public function getStock(): int
+    {
+        return $this->_stock;
+    }
+
+    #endregion
+
+    #region Mutators
+
+    /**
      * 
      * @param int $id
      * 
@@ -77,17 +140,17 @@ class Article
     }
 
     /**
-     * getName
-     *
-     * @return string
+     * 
+     * 
+     * @param int $categoryId
+     * 
      */
-    public function getName(): string
+    public function setCategoryId(int $categoryId)
     {
-        return $this->_name;
+        $this->_categoryId = $categoryId;
     }
 
     /**
-     * setName
      * 
      * @param string $name
      * 
@@ -97,13 +160,7 @@ class Article
         $this->_name = $name;
     }
 
-    public function getDescription(): string
-    {
-        return $this->_description;
-    }
-
     /**
-     * setDescription
      *
      * @param string $description
      * 
@@ -113,13 +170,7 @@ class Article
         $this->_description = $description;
     }
 
-    public function getPrice(): float
-    {
-        return $this->_price;
-    }
-
     /**
-     * setPrice
      *
      * @param string $price
      * 
@@ -129,13 +180,7 @@ class Article
         $this->_price = $price;
     }
 
-    public function getSock(): int
-    {
-        return $this->_stock;
-    }
-
     /**
-     * setStock
      *
      * @param int $stock
      * 
@@ -144,4 +189,6 @@ class Article
     {
         $this->_stock = $stock;
     }
+
+    #endregion
 }

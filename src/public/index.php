@@ -48,12 +48,32 @@ $app->get('/', function (Request $request, Response $response) {
     return $response->getBody()->write("hello");
 });
 
+// search articles
+$app->get('/search', function (Request $request, Response $response) {
+    $params = $request->getQueryParams();
+    $query = "";
+    if (isset($params['query'])) {
+        $query = $params['query'];
+    }
+    return $response->getBody()->write("Search results for '$query'");
+});
+
+// articles by category
+$app->get('/articles/{categoryId}', function () {
+});
+
 // article details
-$app->get('/article/{id}', function () {
+$app->get('/article/{id}', function (Request $request, Response $response, $args) {
+    $id = $args['id'];
+    return $response->getBody()->write("article $id");
 });
 
 // cart
 $app->get('/cart', function () {
+});
+
+// checkout
+$app->get('/checkout', function () {
 });
 
 
