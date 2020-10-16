@@ -11,6 +11,16 @@ class SqlArticleRepository extends ArticleRepository
 
     #endregion
 
+    /**
+     * Create a new SqlArticleRepository
+     *
+     * @param SqlConnectionManager $connectionMgr
+     */
+    public function __construct(SqlConnectionManager $connectionMgr)
+    {
+        $this->setConnectionManager($connectionMgr);
+    }
+
     #region Accessors
 
     public function getAllArticles(): iterable
