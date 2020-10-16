@@ -13,6 +13,11 @@ class SqlUserDirectory extends UserDirectory
 
     #endregion
 
+    /**
+     * Create a new SqlUserDirectory
+     *
+     * @param SqlConnectionManager $connectionMgr
+     */
     public function __construct(SqlConnectionManager $connectionMgr)
     {
         $this->setConnectionManager($connectionMgr);
