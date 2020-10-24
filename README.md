@@ -18,7 +18,7 @@ Then, run this command to install the required composer packages:
 Create and fill the database using the sql files in 'src/data/':
 
 ```
-cd src/data/
+cd ./data/
 mysql -u -p > webshop.sql
 mysql -u -p > filltables.sql
 
@@ -33,7 +33,7 @@ To run this project, start your web and databse servers. <br>
 If you are using the built-in PHP server, make sure that you are in the 'src/public' directory when you start it:
 
 ```
-cd src/public/
+cd ./src/public/
 php -S localhost:8080
 
 ```
