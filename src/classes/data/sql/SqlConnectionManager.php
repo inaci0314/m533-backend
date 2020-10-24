@@ -15,12 +15,13 @@ class SqlConnectionManager
      * Creates a new connection manager
      *
      * @param string $host
+     * @param string $dbname
      * @param string $user
      * @param string $password
      */
-    public function __construct(string $host, string $user, string $password)
+    public function __construct(string $host, string $dbname, string $user, string $password)
     {
-        // TODO: Implement
+        $this->_connection = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);
     }
 
     #region Accessors
