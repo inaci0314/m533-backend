@@ -1,5 +1,7 @@
 <?php
 
+require __DIR__ . '/Category.php';
+
 class CategoryImpl implements Category
 {
     #region Properties

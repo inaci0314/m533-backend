@@ -1,13 +1,24 @@
 <?php
 
+require __DIR__ . '/../../domain/Category/CategoryRepository.php';
+require __DIR__ . '/../../domain/Category/CategoryImpl.php';
+
 class SqlCategoryRepository extends CategoryRepository
 {
     #region Properties
 
     /**
-     * @var SqlConnectionManager $_connectionMgr Connection manager
+     * Connection manager
+     * 
+     * @var SqlConnectionManager $_connectionMgr
      */
     private $_connectionMgr = null;
+
+    /**
+     * Name of the table in the DB
+     * @var string $_tablename 
+     */
+    private $_tablename = "categories";
 
     #endregion
 
@@ -25,7 +36,21 @@ class SqlCategoryRepository extends CategoryRepository
 
     public function getAllCategories(): iterable
     {
-        $categories = array();
+        $con = $this->_connectionMgr->getConnection();
+
+        $query = "SELECT * FROM " . $this->_tablename;
+        $res = $con->query($query);
+
+        // If there was an error, throw exception
+        if (!$res) {
+            throw new Exception();
+        } else {
+            // Build array
+            $categories = array();
+            while ($row = $res->fetch(PDO::FETCH_ASSOC)) {
+                $categories[] = new CategoryImpl($row['id'], $row['name']);
+            }
+        }
 
         return $categories;
     }
@@ -34,7 +59,23 @@ class SqlCategoryRepository extends CategoryRepository
     {
         $category = null;
 
-        // TODO: Implement
+        $con = $this->_connectionMgr->getConnection();
+
+        $query = "SELECT * FROM " . $this->_tablename . " WHERE id = $id";
+        $rs = $con->query($query);
+
+        // If there was an error, throw exception
+        if (!$rs) {
+            throw new Exception(implode(", ", $con->errorInfo()));
+        }
+
+        if ($rs->rowCount() != 0) {
+            $row = $rs->fetch(pdo::FETCH_ASSOC);
+            // If result is not empty, create object
+            if (isset($row["id"])) {
+                $category = new CategoryImpl($row["id"], $row["name"]);
+            }
+        }
 
         return $category;
     }
@@ -45,14 +86,28 @@ class SqlCategoryRepository extends CategoryRepository
 
     #region Inherited
 
-    public function addCategory(Category $category)
+    public function addCategory(Category $category): bool
     {
-        // TODO: Implement
+        $con = $this->_connectionMgr->getConnection();
+
+        $query = "INSERT INTO ?(name) VALUES(?)";
+        $stmt = $con->prepare($query);
+
+        // If prepare failed throw exception
+        if (!$stmt) {
+            throw new Exception(implode(", ", $con->errorInfo()));
+        }
+
+        $stmt->bindValue(1, $this->_tablename);
+        $stmt->bindValue(2, $category->getName());
+
+        return $res = $stmt->execute();
     }
 
-    public function removeCategory(int $id)
+    public function removeCategory(int $id): bool
     {
         // TODO: Implement
+        return false;
     }
 
     #endregion

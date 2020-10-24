@@ -37,18 +37,16 @@ abstract class CategoryRepository
      * Adds a category to the repository
      *
      * @param Category $category
-     * @return void
+     * @return bool result
      */
-    public abstract function addCategory(Category $category);
+    public abstract function addCategory(Category $category): bool;
     /**
      * Removes a category from the repository
      *
      * @param integer $id
-     * @return void
+     * @return bool result
      */
-    public abstract function removeCategory(int $id);
-
-
+    public abstract function removeCategory(int $id): bool;
 
     #endregion
 }
