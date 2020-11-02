@@ -1,6 +1,8 @@
 <?php
 
+#region Required classes
 require __DIR__ . '/Category.php';
+#endregion
 
 class CategoryImpl implements Category
 {

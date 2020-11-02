@@ -1,7 +1,9 @@
 <?php
 
+#region Required classes
 require __DIR__ . '/../../domain/Category/CategoryRepository.php';
 require __DIR__ . '/../../domain/Category/CategoryImpl.php';
+#endregion
 
 class SqlCategoryRepository extends CategoryRepository
 {

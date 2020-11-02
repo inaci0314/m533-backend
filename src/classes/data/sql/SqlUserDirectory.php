@@ -1,5 +1,10 @@
 <?php
 
+#region Required classes
+require __DIR__ . '/../../domain/User/UserDirectory.php';
+require __DIR__ . '/../../domain/User/UserImpl.php';
+#endregion
+
 class SqlUserDirectory extends UserDirectory
 {
     #region Properties

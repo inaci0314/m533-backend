@@ -1,5 +1,9 @@
 <?php
 
+#region Required classes
+require __DIR__ . '/User.php';
+#endregion
+
 class UserImpl implements User
 {
     #region Properties
