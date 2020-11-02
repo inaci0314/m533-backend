@@ -1,5 +1,10 @@
 <?php
 
+#region Required classes
+require __DIR__ . '/../../domain/Article/ArticleRepository.php';
+require __DIR__ . '/../../domain/Article/ArticleImpl.php';
+#endregion
+
 class SqlArticleRepository extends ArticleRepository
 {
     #region Properties
@@ -8,6 +13,12 @@ class SqlArticleRepository extends ArticleRepository
      * @var SqlConnectionManager $_connectionMgr Connection manager
      */
     private $_connectionMgr = null;
+
+    /**
+     * Name of the table in the DB
+     * @var string $_tablename 
+     */
+    private $_tablename = "articles";
 
     #endregion
 
@@ -25,9 +36,21 @@ class SqlArticleRepository extends ArticleRepository
 
     public function getAllArticles(): iterable
     {
-        $articles = array();
+        $con = $this->_connectionMgr->getConnection();
 
-        // TODO: Implement
+        $query = "SELECT * FROM " . $this->_tablename;
+        $res = $con->query($query);
+
+        // If there was an error, throw exception
+        if (!$res) {
+            throw new Exception();
+        } else {
+            // Build array
+            $articles = array();
+            while ($row = $res->fetch(PDO::FETCH_ASSOC)) {
+                $articles[] = new ArticleImpl($row['id'], $row['category_id'], $row['name'], $row['description'], $row['price'], $row['price']);
+            }
+        }
 
         return $articles;
     }
@@ -36,7 +59,23 @@ class SqlArticleRepository extends ArticleRepository
     {
         $article = null;
 
-        // TODO: Implement
+        $con = $this->_connectionMgr->getConnection();
+
+        $query = "SELECT * FROM " . $this->_tablename . " WHERE id = $id";
+        $rs = $con->query($query);
+
+        // If there was an error, throw exception
+        if (!$rs) {
+            throw new Exception(implode(", ", $con->errorInfo()));
+        }
+
+        if ($rs->rowCount() != 0) {
+            $row = $rs->fetch(pdo::FETCH_ASSOC);
+            // If result is not empty, create object
+            if (isset($row["id"])) {
+                $article = new ArticleImpl($row['id'], $row['category_id'], $row['name'], $row['description'], $row['price'], $row['price']);
+            }
+        }
 
         return $article;
     }

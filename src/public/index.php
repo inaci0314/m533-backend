@@ -1,21 +1,19 @@
 <?php
 
-/* Config */
-
+#region Config
 $configfile = $_SERVER['DOCUMENT_ROOT'] . '/src/config/config.ini';
-$test = parse_ini_file($configfile);
+$config = parse_ini_file($configfile);
+#endregion
 
-$config = $test;
-
-/* Config END */
-
+#region Required classes
 require '../../vendor/autoload.php';
 require '../classes/data/sql/SqlConnectionManager.php';
 require '../classes/data/sql/SqlCategoryRepository.php';
+require '../classes/data/sql/SqlArticleRepository.php';
+#endregion
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
-use \Slim\Http\Response as ErrorResponse;
 
 $app = new \Slim\App(['settings' => $config]);
 
@@ -32,7 +30,6 @@ $container['logger'] = function ($c) {
 };
 
 // db
-$db = $config['db'];
 $container['connectionMgr'] = function ($c) {
     $db = $c["settings"]["db"];
     return new SqlConnectionManager($db['host'], $db['dbname'], $db['user'], $db['pass']);
@@ -47,7 +44,7 @@ $app->get('/', function (Request $request, Response $response) {
     return $response->getBody()->write("hello");
 });
 
-// get all categories
+// Get all categories
 $app->get('/categories', function (Request $request, Response $response) {
     $connectionMgr = $this->connectionMgr;
     $categoryRepository = new SqlCategoryRepository($connectionMgr);
@@ -65,7 +62,7 @@ $app->get('/categories', function (Request $request, Response $response) {
     return $response->getBody()->write(json_encode($res));
 });
 
-// get category by id
+// Get category by id
 $app->get('/categories/{id}', function (Request $request, Response $response, $args) {
     $id = $args["id"];
 
@@ -90,11 +87,51 @@ $app->get('/categories/{id}', function (Request $request, Response $response, $a
     return $response;
 });
 
-// articles by category
-$app->get('/articles/{categoryId}', function (Request $request, Response $response, $args) {
-    $categoryId = $args["categoryId"];
-    return $response->getBody()->write("categoryId: $categoryId");
+// Get all articles
+$app->get('/articles', function (Request $request, Response $response) {
+    $connectionMgr = $this->connectionMgr;
+    $articleRepository = new SqlArticleRepository($connectionMgr);
+
+    $articles = $articleRepository->getAllArticles();
+
+    $res = array();
+    foreach ($articles as $article) {
+        $res[] = array(
+            "id" => $article->getId(),
+            "name" => $article->getName()
+        );
+    }
+
+    return $response->getBody()->write(json_encode($res));
 });
+
+// Get article by id
+$app->get('/articles/{id}', function (Request $request, Response $response, $args) {
+    $id = $args["id"];
+
+    $connectionMgr = $this->connectionMgr;
+    $articleRepository = new SqlArticleRepository($connectionMgr);
+
+    $article = $articleRepository->getArticleById($id);
+
+    $res = array();
+    // If no article was found, return error code 404
+    if (!isset($article)) {
+        $response = $response->withStatus(404);
+    } else {
+        $res = array(
+            "id" => $article->getId(),
+            "name" => $article->getName()
+        );
+
+        $response->getBody()->write(json_encode($res));
+    }
+
+    return $response;
+});
+
+// Get articles by category
+// TODO: add category id as query param to '/articles' route ?
 
 // search articles
 $app->get('/search', function (Request $request, Response $response) {
@@ -105,23 +142,6 @@ $app->get('/search', function (Request $request, Response $response) {
     }
     return $response->getBody()->write("Search results for '$query'");
 });
-
-
-
-// article details
-$app->get('/article/{id}', function (Request $request, Response $response, $args) {
-    $id = $args['id'];
-    return $response->getBody()->write("article $id");
-});
-
-// cart
-$app->get('/cart', function () {
-});
-
-// checkout
-$app->get('/checkout', function () {
-});
-
 /* Routes END */
 
 // Run the app

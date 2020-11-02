@@ -1,5 +1,9 @@
 <?php
 
+#region Required classes
+require __DIR__ . '/Article.php';
+#endregion
+
 class ArticleImpl implements Article
 {
     #region Properties
