@@ -34,23 +34,24 @@ class SqlArticleRepository extends ArticleRepository
 
     #region Accessors
 
+
     public function getAllArticles(): iterable
     {
         $con = $this->_connectionMgr->getConnection();
 
         $query = "SELECT * FROM " . $this->_tablename;
-        $res = $con->query($query);
+        $rs = $con->query($query);
 
         // If there was an error, throw exception
-        if (!$res) {
-            throw new Exception();
-        } else {
-            // Build array
-            $articles = array();
-            while ($row = $res->fetch(PDO::FETCH_ASSOC)) {
-                $articles[] = new ArticleImpl($row['id'], $row['category_id'], $row['name'], $row['description'], $row['price'], $row['price']);
-            }
+        if (!$rs) {
+            throw new Exception(implode(", ", $con->errorInfo()));
         }
+        // Build array
+        $articles = array();
+        while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
+            $articles[] = new ArticleImpl($row['id'], $row['category_id'], $row['name'], $row['description'], $row['price'], $row['price']);
+        }
+
 
         return $articles;
     }
@@ -84,7 +85,21 @@ class SqlArticleRepository extends ArticleRepository
     {
         $articles = array();
 
-        // TODO: Implement
+        $con = $this->_connectionMgr->getConnection();
+
+        $query = "SELECT * FROM " . $this->_tablename . " WHERE category_id = $categoryId;";
+        $rs = $con->query($query);
+
+        // If there was an error, throw exception
+        if (!$rs) {
+            throw new Exception(implode(", ", $con->errorInfo()));
+        }
+
+        // Build array
+        $articles = array();
+        while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
+            $articles[] = new ArticleImpl($row['id'], $row['category_id'], $row['name'], $row['description'], $row['price'], $row['price']);
+        }
 
         return $articles;
     }

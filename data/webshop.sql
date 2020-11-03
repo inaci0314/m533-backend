@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS categories (
 /* Create article table */
 CREATE TABLE IF NOT EXISTS articles (
     id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    category_id INT UNSIGNED NOT NULL DEFAULT 0,
+    category_id INT UNSIGNED NOT NULL,
     name VARCHAR(50) NOT NULL,
     description VARCHAR(250),
     stock INT UNSIGNED NOT NULL,

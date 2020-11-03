@@ -10,6 +10,23 @@ abstract class ArticleRepository
      */
     public static $instance = null;
 
+
+    // TEST //
+    /**
+     * Used to facilitate the creation of the array representing an article
+     *
+     * @var array $articleDef
+     */
+    public $articleDef = array(
+        "id" => "getId",
+        "categoryId" => "getCategoryId",
+        "name" => "getName",
+        "description" => "getDescription",
+        "stock" => "getStock",
+        "price" => "getPrice"
+    );
+    // ---- //
+
     #endregion
 
     #region Accessors

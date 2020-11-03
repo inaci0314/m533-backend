@@ -17,7 +17,7 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 $app = new \Slim\App(['settings' => $config]);
 
-/* Dependencies */
+#region Depedencies (containers)
 
 $container = $app->getContainer();
 
@@ -35,9 +35,9 @@ $container['connectionMgr'] = function ($c) {
     return new SqlConnectionManager($db['host'], $db['dbname'], $db['user'], $db['pass']);
 };
 
-/* Dependencies END */
+#endregion
 
-/* Routes */
+#region Routes
 
 // test
 $app->get('/', function (Request $request, Response $response) {
@@ -87,19 +87,41 @@ $app->get('/categories/{id}', function (Request $request, Response $response, $a
     return $response;
 });
 
+// Update a category (TEST)
+$app->put('/categories/{id}', function (Request $request, Response $response, $args) {
+    $id = $args["id"];
+
+    $connectionMgr = $this->connectionMgr;
+    $categoryRepository = new SqlCategoryRepository($connectionMgr);
+
+    $category = $categoryRepository->getCategoryById($id);
+
+    $input = $request->getParsedBody();
+    $input["name"];
+
+
+
+    return $this->response->withJson($input);
+});
+
 // Get all articles
 $app->get('/articles', function (Request $request, Response $response) {
     $connectionMgr = $this->connectionMgr;
     $articleRepository = new SqlArticleRepository($connectionMgr);
 
-    $articles = $articleRepository->getAllArticles();
+    $category = $request->getQueryParam("category");
+    if (isset($category))
+        $articles = $articleRepository->getArticlesByCategory($category);
+    else
+        $articles = $articleRepository->getAllArticles();
 
     $res = array();
+    $articleDef = $articleRepository->articleDef;
     foreach ($articles as $article) {
-        $res[] = array(
-            "id" => $article->getId(),
-            "name" => $article->getName()
-        );
+        foreach ($articleDef as $def => $func) {
+            $art[$def] = $article->$func();
+        }
+        $res[] = $art;
     }
 
     return $response->getBody()->write(json_encode($res));
@@ -129,20 +151,7 @@ $app->get('/articles/{id}', function (Request $request, Response $response, $arg
 
     return $response;
 });
-
-// Get articles by category
-// TODO: add category id as query param to '/articles' route ?
-
-// search articles
-$app->get('/search', function (Request $request, Response $response) {
-    $params = $request->getQueryParams();
-    $query = "";
-    if (isset($params['query'])) {
-        $query = $params['query'];
-    }
-    return $response->getBody()->write("Search results for '$query'");
-});
-/* Routes END */
+#endregion
 
 // Run the app
 $app->run();
