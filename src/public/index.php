@@ -1,5 +1,8 @@
 <?php
 
+// Allow the frontend application to use this API
+header("Access-Control-Allow-Origin: http://localhost:4200");
+
 #region Config
 $configfile = $_SERVER['DOCUMENT_ROOT'] . '/src/config/config.ini';
 $config = parse_ini_file($configfile);
@@ -38,6 +41,7 @@ $container['connectionMgr'] = function ($c) {
 #endregion
 
 #region Routes
+$apiV1 = '/api/v1';
 
 // test
 $app->get('/', function (Request $request, Response $response) {
@@ -45,7 +49,7 @@ $app->get('/', function (Request $request, Response $response) {
 });
 
 // Get all categories
-$app->get('/categories', function (Request $request, Response $response) {
+$app->get("$apiV1/categories", function (Request $request, Response $response) {
     $connectionMgr = $this->connectionMgr;
     $categoryRepository = new SqlCategoryRepository($connectionMgr);
 
@@ -63,7 +67,7 @@ $app->get('/categories', function (Request $request, Response $response) {
 });
 
 // Get category by id
-$app->get('/categories/{id}', function (Request $request, Response $response, $args) {
+$app->get("$apiV1/categories/{id}", function (Request $request, Response $response, $args) {
     $id = $args["id"];
 
     $connectionMgr = $this->connectionMgr;
@@ -88,7 +92,7 @@ $app->get('/categories/{id}', function (Request $request, Response $response, $a
 });
 
 // Update a category (TEST)
-$app->put('/categories/{id}', function (Request $request, Response $response, $args) {
+$app->put("$apiV1/categories/{id}", function (Request $request, Response $response, $args) {
     $id = $args["id"];
 
     $connectionMgr = $this->connectionMgr;
@@ -99,13 +103,11 @@ $app->put('/categories/{id}', function (Request $request, Response $response, $a
     $input = $request->getParsedBody();
     $input["name"];
 
-
-
     return $this->response->withJson($input);
 });
 
-// Get all articles
-$app->get('/articles', function (Request $request, Response $response) {
+// Get all articles"
+$app->get("$apiV1/articles", function (Request $request, Response $response) {
     $connectionMgr = $this->connectionMgr;
     $articleRepository = new SqlArticleRepository($connectionMgr);
 
@@ -128,7 +130,7 @@ $app->get('/articles', function (Request $request, Response $response) {
 });
 
 // Get article by id
-$app->get('/articles/{id}', function (Request $request, Response $response, $args) {
+$app->get("$apiV1/articles/{id}", function (Request $request, Response $response, $args) {
     $id = $args["id"];
 
     $connectionMgr = $this->connectionMgr;
