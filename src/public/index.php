@@ -106,7 +106,7 @@ $app->put("$apiV1/categories/{id}", function (Request $request, Response $respon
     return $this->response->withJson($input);
 });
 
-// Get all articles"
+// Get all articles or get articles by category id
 $app->get("$apiV1/articles", function (Request $request, Response $response) {
     $connectionMgr = $this->connectionMgr;
     $articleRepository = new SqlArticleRepository($connectionMgr);
@@ -143,10 +143,9 @@ $app->get("$apiV1/articles/{id}", function (Request $request, Response $response
     if (!isset($article)) {
         $response = $response->withStatus(404);
     } else {
-        $res = array(
-            "id" => $article->getId(),
-            "name" => $article->getName()
-        );
+        foreach ($articleRepository->articleDef as $def => $func) {
+            $res[$def] = $article->$func();
+        }
 
         $response->getBody()->write(json_encode($res));
     }
